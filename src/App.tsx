@@ -1,81 +1,45 @@
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "./components/ui/button"
+import { Input } from "./components/ui/input"
+import { Label } from "./components/ui/label"
+import { Card, CardContent } from "./components/ui/card"
 
 function App() {
-  const [showForm, setShowForm] = useState(false)
+  const [showAssessmentForm, setShowAssessmentForm] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <h1 className="text-xl font-bold mb-4">USED POS システム</h1>
-      <div className="flex gap-2 mb-6">
-        <Button>ダッシュボード</Button>
-        <Button>設定</Button>
-        <Button>買取</Button>
-        <Button>販売</Button>
-        <Button>顧客管理</Button>
-        <Button>商品管理</Button>
-        <Button>在庫設定</Button>
-        <Button onClick={() => setShowForm((prev) => !prev)}>査定</Button>
-      </div>
+    <div className="min-h-screen bg-gray-100 text-gray-900 p-6">
+      <header className="mb-6">
+        <h1 className="text-2xl font-bold">ユーズドPOS</h1>
+        <nav className="mt-2 flex gap-2">
+          <Button onClick={() => setShowAssessmentForm(true)}>査定</Button>
+          <Button onClick={() => setShowAssessmentForm(false)}>閉じる</Button>
+        </nav>
+      </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-sm text-gray-500">本日の売上</p>
-            <p className="text-xl font-bold">¥0</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-sm text-gray-500">本日の買取</p>
-            <p className="text-xl font-bold">¥0</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-sm text-gray-500">総在庫数</p>
-            <p className="text-xl font-bold">0</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-sm text-gray-500">在庫不足</p>
-            <p className="text-xl font-bold">0</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-sm text-gray-500">査定待ち</p>
-            <p className="text-xl font-bold">0</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {showForm && (
-        <div className="mt-8 space-y-4 bg-white p-6 rounded shadow-md max-w-xl">
-          <h2 className="text-lg font-semibold">査定フォーム</h2>
-          <div className="grid gap-4">
-            <div>
-              <Label htmlFor="item">商品名</Label>
-              <Input id="item" placeholder="例：iPhone 14 Pro" />
+      {showAssessmentForm && (
+        <Card className="max-w-2xl mx-auto mt-4 p-4">
+          <CardContent className="space-y-4">
+            <h2 className="text-xl font-semibold">査定フォーム</h2>
+            <div className="space-y-2">
+              <Label htmlFor="name">顧客名</Label>
+              <Input id="name" placeholder="山田太郎" />
             </div>
-            <div>
-              <Label htmlFor="price">買取希望額</Label>
-              <Input id="price" type="number" placeholder="例：50000" />
+            <div className="space-y-2">
+              <Label htmlFor="tel">電話番号</Label>
+              <Input id="tel" placeholder="080-xxxx-xxxx" />
             </div>
-            <div>
-              <Label htmlFor="condition">状態</Label>
-              <Input id="condition" placeholder="例：目立つ傷なし" />
+            <div className="space-y-2">
+              <Label htmlFor="items">商品詳細</Label>
+              <Input id="items" placeholder="iPhone 13, Switch Lite など" />
             </div>
             <Button className="w-full">送信</Button>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   )
 }
 
 export default App
+
