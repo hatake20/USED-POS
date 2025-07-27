@@ -1,39 +1,39 @@
-import React, { useState } from 'react';
-import Layout from './components/Layout';
-import Dashboard from './components/Dashboard';
-import AssessmentPage from './components/Assessment';
-import PurchasePage from './components/Purchase';
-import SalePage from './components/Sale';
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
-const App: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState('dashboard');
-
-  const renderCurrentPage = () => {
-    switch (currentPage) {
-      case 'dashboard':
-        return <Dashboard />;
-      case 'assessment':
-        return <AssessmentPage />;
-      case 'purchase':
-        return <PurchasePage />;
-      case 'sale':
-        return <SalePage />;
-      case 'customers':
-        return <div className="text-center py-12 text-gray-500">顧客管理ページ - 準備中</div>;
-      case 'products':
-        return <div className="text-center py-12 text-gray-500">商品管理ページ - 準備中</div>;
-      case 'settings':
-        return <div className="text-center py-12 text-gray-500">設定ページ - 準備中</div>;
-      default:
-        return <Dashboard />;
-    }
-  };
-
+export default function App() {
   return (
-    <Layout currentPage={currentPage} onPageChange={setCurrentPage}>
-      {renderCurrentPage()}
-    </Layout>
-  );
-};
+    <div className="min-h-screen bg-gray-100 p-6">
+      <header className="text-2xl font-bold mb-6">📊 USED POS ダッシュボード</header>
 
-export default App;
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card>
+          <CardContent>
+            <p className="text-sm text-gray-500">本日の売上</p>
+            <p className="text-xl font-semibold mt-2">¥0</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent>
+            <p className="text-sm text-gray-500">本日の買取</p>
+            <p className="text-xl font-semibold mt-2">¥0</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent>
+            <p className="text-sm text-gray-500">在庫数</p>
+            <p className="text-xl font-semibold mt-2">0 個</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="mt-8 space-x-4">
+        <Button>買取管理</Button>
+        <Button variant="outline">商品管理</Button>
+        <Button variant="ghost">設定</Button>
+      </div>
+    </div>
+  );
+}
