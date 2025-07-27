@@ -1,79 +1,100 @@
-import { useState } from 'react';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'home' | 'assessment'>('home');
+  const [activeTab, setActiveTab] = useState("dashboard");
   const [formData, setFormData] = useState({
-    customerName: '',
-    customerPhone: '',
-    itemCount: '',
-    totalEstimatedValue: '',
-    itemDetails: '',
+    name: "",
+    phone: "",
+    product: "",
+    condition: "",
+    price: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async () => {
-    const payload = {
-      action: 'appendData',
-      sheetName: '査定データ',
-      data: {
-        ...formData,
-        timestamp: new Date().toLocaleString('ja-JP'),
-        status: '査定中',
-      },
-    };
-
     try {
-      const res = await fetch('あなたのGAS WebApp URL', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+      await fetch("あなたのGAS WebApp URL", {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
-
-      if (res.ok) {
-        alert('送信完了');
-        setFormData({
-          customerName: '',
-          customerPhone: '',
-          itemCount: '',
-          totalEstimatedValue: '',
-          itemDetails: '',
-        });
-      } else {
-        alert('送信失敗');
-      }
-    } catch (error) {
-      alert('送信エラー: ' + error);
+      alert("送信しました");
+      setFormData({
+        name: "",
+        phone: "",
+        product: "",
+        condition: "",
+        price: "",
+      });
+    } catch (err) {
+      alert("送信に失敗しました");
     }
   };
 
   return (
-    <div className="p-4 max-w-2xl mx-auto">
-      <div className="flex gap-4 mb-4">
-        <button onClick={() => setActiveTab('home')} className={`px-4 py-2 rounded ${activeTab === 'home' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>ホーム</button>
-        <button onClick={() => setActiveTab('assessment')} className={`px-4 py-2 rounded ${activeTab === 'assessment' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>査定</button>
+    <div className="p-6 space-y-6">
+      <div className="flex items-center gap-4">
+        <h1 className="text-2xl font-bold">USED POS システム</h1>
+        <Button
+          variant={activeTab === "dashboard" ? "default" : "outline"}
+          onClick={() => setActiveTab("dashboard")}
+        >
+          ダッシュボード
+        </Button>
+        <Button
+          variant={activeTab === "assessment" ? "default" : "outline"}
+          onClick={() => setActiveTab("assessment")}
+        >
+          査定
+        </Button>
       </div>
 
-      {activeTab === 'home' && (
-        <div className="text-gray-700">
-          <p>メイン画面です。メニューから操作を選んでください。</p>
+      {activeTab === "dashboard" && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          <Card><CardContent className="p-4"><p className="text-sm">本日の売上</p><p className="text-xl font-bold">¥0</p></CardContent></Card>
+          <Card><CardContent className="p-4"><p className="text-sm">本日の買取</p><p className="text-xl font-bold">¥0</p></CardContent></Card>
+          <Card><CardContent className="p-4"><p className="text-sm">総在庫数</p><p className="text-xl font-bold">0</p></CardContent></Card>
+          <Card><CardContent className="p-4"><p className="text-sm">在庫不足</p><p className="text-xl font-bold">0</p></CardContent></Card>
+          <Card><CardContent className="p-4"><p className="text-sm">査定待ち</p><p className="text-xl font-bold">0</p></CardContent></Card>
         </div>
       )}
 
-      {activeTab === 'assessment' && (
-        <div className="border p-4 rounded shadow">
-          <h2 className="text-lg font-semibold mb-2">査定入力</h2>
-          <input className="w-full mb-2 p-2 border rounded" name="customerName" placeholder="顧客名" value={formData.customerName} onChange={handleChange} />
-          <input className="w-full mb-2 p-2 border rounded" name="customerPhone" placeholder="電話番号" value={formData.customerPhone} onChange={handleChange} />
-          <input className="w-full mb-2 p-2 border rounded" name="itemCount" placeholder="商品数" value={formData.itemCount} onChange={handleChange} />
-          <input className="w-full mb-2 p-2 border rounded" name="totalEstimatedValue" placeholder="見積額" value={formData.totalEstimatedValue} onChange={handleChange} />
-          <textarea className="w-full mb-2 p-2 border rounded" name="itemDetails" placeholder="商品詳細" value={formData.itemDetails} onChange={handleChange} />
-          <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-full" onClick={handleSubmit}>送信</button>
+      {activeTab === "assessment" && (
+        <div className="grid gap-4 max-w-md">
+          <h2 className="text-xl font-bold">査定フォーム</h2>
+          <div>
+            <Label>名前</Label>
+            <Input name="name" value={formData.name} onChange={handleChange} />
+          </div>
+          <div>
+            <Label>電話番号</Label>
+            <Input name="phone" value={formData.phone} onChange={handleChange} />
+          </div>
+          <div>
+            <Label>商品名</Label>
+            <Input name="product" value={formData.product} onChange={handleChange} />
+          </div>
+          <div>
+            <Label>状態</Label>
+            <Input name="condition" value={formData.condition} onChange={handleChange} />
+          </div>
+          <div>
+            <Label>査定額</Label>
+            <Input name="price" value={formData.price} onChange={handleChange} />
+          </div>
+          <Button onClick={handleSubmit}>送信</Button>
         </div>
       )}
     </div>
   );
 }
-
