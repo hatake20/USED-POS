@@ -23,6 +23,10 @@ export default function App() {
   };
 
   const handleGenerateLink = () => {
+    if (assessments.length === 0) {
+      setShareLink('');
+      return;
+    }
     const shareData = encodeURIComponent(JSON.stringify(assessments));
     const url = `${window.location.origin}/?assess=${shareData}`;
     const shortenerApi = `https://is.gd/create.php?format=simple&url=${encodeURIComponent(url)}`;
@@ -30,6 +34,9 @@ export default function App() {
       .then(res => res.text())
       .then(shortUrl => {
         setShareLink(shortUrl);
+      })
+      .catch(() => {
+        setShareLink(url); // fallback to full URL
       });
   };
 
@@ -106,14 +113,16 @@ export default function App() {
                 </li>
               ))}
             </ul>
-            {shareLink && (
-              <div className="mt-6">
-                <p className="mb-2 font-semibold">査定結果の確認用リンク：</p>
-                <a href={shareLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+            <div className="mt-6">
+              <p className="mb-2 font-semibold">査定結果の確認用リンク：</p>
+              {shareLink ? (
+                <a href={shareLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline break-all">
                   {shareLink}
                 </a>
-              </div>
-            )}
+              ) : (
+                <p className="text-gray-500">※まだリンクは生成されていません</p>
+              )}
+            </div>
           </div>
         );
       case 'sales':
