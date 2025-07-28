@@ -7,7 +7,7 @@ export default function App() {
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState('');
   const [condition, setCondition] = useState('');
-  const [qrUrl, setQrUrl] = useState('');
+  const [shareLink, setShareLink] = useState('');
 
   const [salesProduct, setSalesProduct] = useState('');
   const [salesPrice, setSalesPrice] = useState('');
@@ -27,8 +27,7 @@ export default function App() {
     fetch(shortenerApi)
       .then(res => res.text())
       .then(shortUrl => {
-        const googleQrUrl = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(shortUrl)}`;
-        setQrUrl(googleQrUrl);
+        setShareLink(shortUrl);
       });
   };
 
@@ -88,7 +87,7 @@ export default function App() {
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
               onClick={handleAssessSubmit}
             >
-              追加して確認用QR生成
+              追加して確認用リンク生成
             </button>
             <ul className="mt-4 space-y-2">
               {assessments.map((item, i) => (
@@ -97,10 +96,12 @@ export default function App() {
                 </li>
               ))}
             </ul>
-            {qrUrl && (
+            {shareLink && (
               <div className="mt-6">
-                <p className="mb-2 font-semibold">査定結果の確認用QRコード：</p>
-                <img src={qrUrl} alt="QR Code" className="w-48 h-48" />
+                <p className="mb-2 font-semibold">査定結果の確認用リンク：</p>
+                <a href={shareLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                  {shareLink}
+                </a>
               </div>
             )}
           </div>
@@ -196,4 +197,3 @@ export default function App() {
     </div>
   );
 }
-
