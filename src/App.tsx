@@ -23,8 +23,13 @@ export default function App() {
 
     const shareData = encodeURIComponent(JSON.stringify(updated));
     const url = `${window.location.origin}/?assess=${shareData}`;
-    const googleQrUrl = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(url)}`;
-    setQrUrl(googleQrUrl);
+    const shortenerApi = `https://is.gd/create.php?format=simple&url=${encodeURIComponent(url)}`;
+    fetch(shortenerApi)
+      .then(res => res.text())
+      .then(shortUrl => {
+        const googleQrUrl = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(shortUrl)}`;
+        setQrUrl(googleQrUrl);
+      });
   };
 
   const handleSalesSubmit = () => {
