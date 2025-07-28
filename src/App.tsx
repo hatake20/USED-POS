@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import QRCode from 'qrcode';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'home' | 'assess' | 'sales' | 'stock' | 'profit'>('home');
@@ -7,16 +8,24 @@ export default function App() {
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState('');
   const [condition, setCondition] = useState('');
+  const [qrUrl, setQrUrl] = useState('');
+
   const [salesProduct, setSalesProduct] = useState('');
   const [salesPrice, setSalesPrice] = useState('');
   const [salesChannel, setSalesChannel] = useState('');
 
-  const handleAssessSubmit = () => {
+  const handleAssessSubmit = async () => {
     const newItem = { productName, price, condition };
-    setAssessments([...assessments, newItem]);
+    const updated = [...assessments, newItem];
+    setAssessments(updated);
     setProductName('');
     setPrice('');
     setCondition('');
+
+    const shareData = encodeURIComponent(JSON.stringify(updated));
+    const url = `${window.location.origin}/?assess=${shareData}`;
+    const generatedQr = await QRCode.toDataURL(url);
+    setQrUrl(generatedQr);
   };
 
   const handleSalesSubmit = () => {
@@ -75,7 +84,7 @@ export default function App() {
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
               onClick={handleAssessSubmit}
             >
-              追加
+              追加して確認用QR生成
             </button>
             <ul className="mt-4 space-y-2">
               {assessments.map((item, i) => (
@@ -84,6 +93,12 @@ export default function App() {
                 </li>
               ))}
             </ul>
+            {qrUrl && (
+              <div className="mt-6">
+                <p className="mb-2 font-semibold">査定結果の確認用QRコード：</p>
+                <img src={qrUrl} alt="QR Code" className="w-48 h-48" />
+              </div>
+            )}
           </div>
         );
       case 'sales':
@@ -177,3 +192,4 @@ export default function App() {
     </div>
   );
 }
+
