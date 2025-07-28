@@ -34,7 +34,6 @@ function App() {
   )
 }
 
-// 👇 シンプルなCSS
 const buttonStyle = {
   background: "#2563eb",
   color: "white",
