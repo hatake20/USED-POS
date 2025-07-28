@@ -20,8 +20,10 @@ export default function App() {
     setProductName('');
     setPrice('');
     setCondition('');
+  };
 
-    const shareData = encodeURIComponent(JSON.stringify(updated));
+  const handleGenerateLink = () => {
+    const shareData = encodeURIComponent(JSON.stringify(assessments));
     const url = `${window.location.origin}/?assess=${shareData}`;
     const shortenerApi = `https://is.gd/create.php?format=simple&url=${encodeURIComponent(url)}`;
     fetch(shortenerApi)
@@ -83,12 +85,20 @@ export default function App() {
                 </select>
               </div>
             </div>
-            <button
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
-              onClick={handleAssessSubmit}
-            >
-              追加して確認用リンク生成
-            </button>
+            <div className="space-x-2">
+              <button
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
+                onClick={handleAssessSubmit}
+              >
+                追加
+              </button>
+              <button
+                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded shadow"
+                onClick={handleGenerateLink}
+              >
+                確認用リンク生成
+              </button>
+            </div>
             <ul className="mt-4 space-y-2">
               {assessments.map((item, i) => (
                 <li key={i} className="bg-white border p-2 rounded shadow">
