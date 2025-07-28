@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'home' | 'assess' | 'sales' | 'stock' | 'profit'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'assess' | 'sales' | 'stock' | 'profit' | 'result'>('home');
   const [assessments, setAssessments] = useState([]);
   const [sales, setSales] = useState([]);
   const [productName, setProductName] = useState('');
@@ -12,6 +12,20 @@ export default function App() {
   const [salesProduct, setSalesProduct] = useState('');
   const [salesPrice, setSalesPrice] = useState('');
   const [salesChannel, setSalesChannel] = useState('');
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const data = urlParams.get('assess');
+    if (data) {
+      setActiveTab('result');
+      try {
+        const parsed = JSON.parse(decodeURIComponent(data));
+        setAssessments(parsed);
+      } catch (e) {
+        console.error("Invalid assessment data");
+      }
+    }
+  }, []);
 
   const handleAssessSubmit = () => {
     const newItem = { productName, price, condition };
@@ -125,6 +139,25 @@ export default function App() {
             </div>
           </div>
         );
+      case 'result':
+        return (
+          <div className="p-4 space-y-6 bg-white rounded shadow max-w-2xl mx-auto">
+            <h2 className="text-2xl font-bold border-b pb-2">査定結果</h2>
+            {assessments.map((item, index) => (
+              <div key={index} className="border-b pb-4 mb-4">
+                <div className="text-gray-600 mb-1 font-semibold">#{index + 1} {item.productName}</div>
+                <div className="flex justify-between text-sm">
+                  <div>グレード: {item.condition}</div>
+                  <div>査定単価: ¥{item.price}</div>
+                  <div>数量: 1点</div>
+                </div>
+              </div>
+            ))}
+            <div className="text-right font-semibold text-lg">
+              査定合計金額：{assessments.reduce((sum, item) => sum + parseInt(item.price || 0), 0)} 円
+            </div>
+          </div>
+        );
       case 'sales':
         return (
           <div className="p-4 space-y-4">
@@ -203,13 +236,15 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-100 to-gray-200 font-sans">
-      <nav className="flex space-x-4 bg-white shadow px-6 py-4 border-b">
-        <button onClick={() => setActiveTab('home')} className="hover:text-blue-600">ホーム</button>
-        <button onClick={() => setActiveTab('assess')} className="hover:text-blue-600">査定</button>
-        <button onClick={() => setActiveTab('sales')} className="hover:text-blue-600">販売</button>
-        <button onClick={() => setActiveTab('stock')} className="hover:text-blue-600">在庫</button>
-        <button onClick={() => setActiveTab('profit')} className="hover:text-blue-600">損益</button>
-      </nav>
+      {activeTab !== 'result' && (
+        <nav className="flex space-x-4 bg-white shadow px-6 py-4 border-b">
+          <button onClick={() => setActiveTab('home')} className="hover:text-blue-600">ホーム</button>
+          <button onClick={() => setActiveTab('assess')} className="hover:text-blue-600">査定</button>
+          <button onClick={() => setActiveTab('sales')} className="hover:text-blue-600">販売</button>
+          <button onClick={() => setActiveTab('stock')} className="hover:text-blue-600">在庫</button>
+          <button onClick={() => setActiveTab('profit')} className="hover:text-blue-600">損益</button>
+        </nav>
+      )}
       <main className="p-4">
         {renderContent()}
       </main>
