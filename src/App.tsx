@@ -36,6 +36,11 @@ export default function App() {
     setCondition('');
   };
 
+  const handleDeleteItem = (indexToDelete) => {
+    const updated = assessments.filter((_, index) => index !== indexToDelete);
+    setAssessments(updated);
+  };
+
   const handleGenerateLink = () => {
     if (assessments.length === 0) {
       setShareLink('');
@@ -50,7 +55,7 @@ export default function App() {
         setShareLink(shortUrl);
       })
       .catch(() => {
-        setShareLink(url); // fallback to full URL
+        setShareLink(url);
       });
   };
 
@@ -60,6 +65,10 @@ export default function App() {
     setSalesProduct('');
     setSalesPrice('');
     setSalesChannel('');
+  };
+
+  const handleReturn = () => {
+    alert('返却処理を行いました');
   };
 
   const renderContent = () => {
@@ -73,31 +82,15 @@ export default function App() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block mb-1">商品名</label>
-                <input
-                  type="text"
-                  className="w-full p-2 border rounded"
-                  value={productName}
-                  onChange={(e) => setProductName(e.target.value)}
-                  placeholder="例: iPhone 12"
-                />
+                <input type="text" className="w-full p-2 border rounded" value={productName} onChange={(e) => setProductName(e.target.value)} placeholder="例: iPhone 12" />
               </div>
               <div>
                 <label className="block mb-1">買取価格</label>
-                <input
-                  type="number"
-                  className="w-full p-2 border rounded"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  placeholder="例: 25000"
-                />
+                <input type="number" className="w-full p-2 border rounded" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="例: 25000" />
               </div>
               <div>
                 <label className="block mb-1">状態</label>
-                <select
-                  className="w-full p-2 border rounded"
-                  value={condition}
-                  onChange={(e) => setCondition(e.target.value)}
-                >
+                <select className="w-full p-2 border rounded" value={condition} onChange={(e) => setCondition(e.target.value)}>
                   <option value="">選択してください</option>
                   <option value="新品">新品</option>
                   <option value="未使用に近い">未使用に近い</option>
@@ -107,32 +100,21 @@ export default function App() {
               </div>
             </div>
             <div className="space-x-2">
-              <button
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
-                onClick={handleAssessSubmit}
-              >
-                追加
-              </button>
-              <button
-                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded shadow"
-                onClick={handleGenerateLink}
-              >
-                確認用リンク生成
-              </button>
+              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow" onClick={handleAssessSubmit}>追加</button>
+              <button className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded shadow" onClick={handleGenerateLink}>確認用リンク生成</button>
             </div>
             <ul className="mt-4 space-y-2">
               {assessments.map((item, i) => (
-                <li key={i} className="bg-white border p-2 rounded shadow">
-                  {item.productName} - ¥{item.price} - {item.condition}
+                <li key={i} className="bg-white border p-2 rounded shadow flex justify-between items-center">
+                  <span>{item.productName} - ¥{item.price} - {item.condition}</span>
+                  <button className="text-red-600" onClick={() => handleDeleteItem(i)}>削除</button>
                 </li>
               ))}
             </ul>
             <div className="mt-6">
               <p className="mb-2 font-semibold">査定結果の確認用リンク：</p>
               {shareLink ? (
-                <a href={shareLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline break-all">
-                  {shareLink}
-                </a>
+                <a href={shareLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline break-all">{shareLink}</a>
               ) : (
                 <p className="text-gray-500">※まだリンクは生成されていません</p>
               )}
@@ -156,6 +138,9 @@ export default function App() {
             <div className="text-right font-semibold text-lg">
               査定合計金額：{assessments.reduce((sum, item) => sum + parseInt(item.price || 0), 0)} 円
             </div>
+            <div className="text-center mt-6">
+              <button onClick={handleReturn} className="bg-red-600 text-white px-6 py-2 rounded shadow">返却する</button>
+            </div>
           </div>
         );
       case 'sales':
@@ -165,41 +150,18 @@ export default function App() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block mb-1">商品名</label>
-                <input
-                  type="text"
-                  className="w-full p-2 border rounded"
-                  value={salesProduct}
-                  onChange={(e) => setSalesProduct(e.target.value)}
-                  placeholder="例: Switch Lite"
-                />
+                <input type="text" className="w-full p-2 border rounded" value={salesProduct} onChange={(e) => setSalesProduct(e.target.value)} placeholder="例: Switch Lite" />
               </div>
               <div>
                 <label className="block mb-1">売値</label>
-                <input
-                  type="number"
-                  className="w-full p-2 border rounded"
-                  value={salesPrice}
-                  onChange={(e) => setSalesPrice(e.target.value)}
-                  placeholder="例: 19800"
-                />
+                <input type="number" className="w-full p-2 border rounded" value={salesPrice} onChange={(e) => setSalesPrice(e.target.value)} placeholder="例: 19800" />
               </div>
               <div>
                 <label className="block mb-1">販売先</label>
-                <input
-                  type="text"
-                  className="w-full p-2 border rounded"
-                  value={salesChannel}
-                  onChange={(e) => setSalesChannel(e.target.value)}
-                  placeholder="例: メルカリ"
-                />
+                <input type="text" className="w-full p-2 border rounded" value={salesChannel} onChange={(e) => setSalesChannel(e.target.value)} placeholder="例: メルカリ" />
               </div>
             </div>
-            <button
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow"
-              onClick={handleSalesSubmit}
-            >
-              追加
-            </button>
+            <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow" onClick={handleSalesSubmit}>追加</button>
             <ul className="mt-4 space-y-2">
               {sales.map((item, i) => (
                 <li key={i} className="bg-white border p-2 rounded shadow">
@@ -250,4 +212,4 @@ export default function App() {
       </main>
     </div>
   );
-}
+} 
