@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import QRCode from 'qrcode';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'home' | 'assess' | 'sales' | 'stock' | 'profit'>('home');
@@ -14,7 +13,7 @@ export default function App() {
   const [salesPrice, setSalesPrice] = useState('');
   const [salesChannel, setSalesChannel] = useState('');
 
-  const handleAssessSubmit = async () => {
+  const handleAssessSubmit = () => {
     const newItem = { productName, price, condition };
     const updated = [...assessments, newItem];
     setAssessments(updated);
@@ -24,8 +23,8 @@ export default function App() {
 
     const shareData = encodeURIComponent(JSON.stringify(updated));
     const url = `${window.location.origin}/?assess=${shareData}`;
-    const generatedQr = await QRCode.toDataURL(url);
-    setQrUrl(generatedQr);
+    const googleQrUrl = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(url)}`;
+    setQrUrl(googleQrUrl);
   };
 
   const handleSalesSubmit = () => {
@@ -192,4 +191,3 @@ export default function App() {
     </div>
   );
 }
-
