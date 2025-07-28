@@ -1,45 +1,70 @@
 import { useState } from "react"
-import { Button } from "./components/ui/button"
-import { Input } from "./components/ui/input"
-import { Label } from "./components/ui/label"
-import { Card, CardContent } from "./components/ui/card"
 
 function App() {
-  const [showAssessmentForm, setShowAssessmentForm] = useState(false)
+  const [showForm, setShowForm] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900 p-6">
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold">ユーズドPOS</h1>
-        <nav className="mt-2 flex gap-2">
-          <Button onClick={() => setShowAssessmentForm(true)}>査定</Button>
-          <Button onClick={() => setShowAssessmentForm(false)}>閉じる</Button>
-        </nav>
-      </header>
+    <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
+      <h1 style={{ fontSize: "24px", fontWeight: "bold" }}>USED POS システム</h1>
 
-      {showAssessmentForm && (
-        <Card className="max-w-2xl mx-auto mt-4 p-4">
-          <CardContent className="space-y-4">
-            <h2 className="text-xl font-semibold">査定フォーム</h2>
-            <div className="space-y-2">
-              <Label htmlFor="name">顧客名</Label>
-              <Input id="name" placeholder="山田太郎" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="tel">電話番号</Label>
-              <Input id="tel" placeholder="080-xxxx-xxxx" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="items">商品詳細</Label>
-              <Input id="items" placeholder="iPhone 13, Switch Lite など" />
-            </div>
-            <Button className="w-full">送信</Button>
-          </CardContent>
-        </Card>
+      <div style={{ marginTop: "20px" }}>
+        <button onClick={() => setShowForm(true)} style={buttonStyle}>査定</button>
+        <button onClick={() => setShowForm(false)} style={{ ...buttonStyle, marginLeft: "10px" }}>閉じる</button>
+      </div>
+
+      {showForm && (
+        <div style={cardStyle}>
+          <h2 style={{ fontSize: "20px", marginBottom: "10px" }}>査定フォーム</h2>
+          <div style={{ marginBottom: "10px" }}>
+            <label>顧客名</label><br />
+            <input type="text" placeholder="山田太郎" style={inputStyle} />
+          </div>
+          <div style={{ marginBottom: "10px" }}>
+            <label>電話番号</label><br />
+            <input type="tel" placeholder="080-xxxx-xxxx" style={inputStyle} />
+          </div>
+          <div style={{ marginBottom: "10px" }}>
+            <label>商品情報</label><br />
+            <input type="text" placeholder="iPhone 13 など" style={inputStyle} />
+          </div>
+          <button style={submitStyle}>送信</button>
+        </div>
       )}
     </div>
   )
 }
 
-export default App
+// 👇 シンプルなCSS
+const buttonStyle = {
+  background: "#2563eb",
+  color: "white",
+  padding: "8px 16px",
+  border: "none",
+  borderRadius: "6px",
+  cursor: "pointer"
+}
 
+const submitStyle = {
+  ...buttonStyle,
+  width: "100%",
+  marginTop: "10px"
+}
+
+const inputStyle = {
+  width: "100%",
+  padding: "8px",
+  borderRadius: "4px",
+  border: "1px solid #ccc",
+  marginTop: "4px"
+}
+
+const cardStyle = {
+  marginTop: "20px",
+  padding: "20px",
+  border: "1px solid #ddd",
+  borderRadius: "8px",
+  background: "#fff",
+  maxWidth: "400px"
+}
+
+export default App
