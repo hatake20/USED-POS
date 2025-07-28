@@ -67,8 +67,8 @@ export default function App() {
     setSalesChannel('');
   };
 
-  const handleReturn = () => {
-    alert('返却処理を行いました');
+  const handleReturn = (indexToReturn) => {
+    alert(`商品 #${indexToReturn + 1} を返却しました`);
   };
 
   const renderContent = () => {
@@ -133,13 +133,13 @@ export default function App() {
                   <div>査定単価: ¥{item.price}</div>
                   <div>数量: 1点</div>
                 </div>
+                <div className="text-right mt-2">
+                  <button onClick={() => handleReturn(index)} className="text-sm text-red-600 underline">返却する</button>
+                </div>
               </div>
             ))}
             <div className="text-right font-semibold text-lg">
               査定合計金額：{assessments.reduce((sum, item) => sum + parseInt(item.price || 0), 0)} 円
-            </div>
-            <div className="text-center mt-6">
-              <button onClick={handleReturn} className="bg-red-600 text-white px-6 py-2 rounded shadow">返却する</button>
             </div>
           </div>
         );
@@ -212,4 +212,4 @@ export default function App() {
       </main>
     </div>
   );
-} 
+}
